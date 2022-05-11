@@ -1,27 +1,23 @@
-#Flags de compilacion
-CFLAGS = -c -std=c++11
+CXX		  := g++
+CXX_FLAGS := -Wall -Wextra -std=c++17 -ggdb
 
-main: main.o AB.o nodoB.o
-	g++  main.o nodoB.o AB.o -o main
-	mv *.o ./objects
-	mv main ./build
+BIN		:= bin
+SRC		:= src
+INCLUDE	:= include
+LIB		:= lib
 
-
-main.o: ./src/main.cpp
-	g++ $(CFLAGS) ./src/main.cpp
-
-nodoB.o: ./src/nodoB.cpp ./include/nodoB.h
-	g++ $(CFLAGS) ./src/nodoB.cpp
-
-AB.o: ./src/AB.cpp ./include/AB.h
-	g++ $(CFLAGS) ./src/AB.cpp
+LIBRARIES	:=
+EXECUTABLE	:= main
 
 
-.PHONY: clean
+all: $(BIN)/$(EXECUTABLE)
+
+run: clean all
+	clear
+	./$(BIN)/$(EXECUTABLE)
+
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+
 clean:
-	rm -rf ./objects/*.o
-	rm -rf ./build/main
-
-
-run:
-	./build/main 
+	-rm $(BIN)/*
