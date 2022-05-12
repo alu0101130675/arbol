@@ -15,7 +15,6 @@ class ArbolB : public Arbol<Clave>
 {
 private:
   vector<vector<NodoB<Clave>>> niveles;
-  int height = 0;
 
 public:
   ArbolB();
@@ -26,30 +25,23 @@ public:
   void write();
 };
 template <class Clave>
-bool checkHeightBalance(NodoB<Clave> *root, int *height, int lef, int rig)
+void checkHeightBalance(NodoB<Clave> *root, int &lef, int &rig, bool &flagg)
 {
   // Check for emptiness
-  int izqHeight = 0, dchoHeight = 0;
-  int l = 0;
-  int r = 0;
   if (root == NULL)
   {
-    *height = 0;
-    return 1;
+    return;
   }
-
-  l = checkHeightBalance(root->get_izq(), &izqHeight, 0, 0);
-  r = checkHeightBalance(root->get_dcho(), &dchoHeight, 0, 0);
-  l = l + lef;
-  r = r + rig;
-
-  *height = (izqHeight > dchoHeight ? izqHeight : dchoHeight) + 1;
-
-  if (std::abs(izqHeight - dchoHeight >= 1))
-    return 0;
-
+  if (flagg)
+  {
+    rig++;
+  }
   else
-    return l && r;
+    lef++;
+  flagg = false;
+  checkHeightBalance(root->get_izq(), lef, rig, flagg);
+  flagg = true;
+  checkHeightBalance(root->get_dcho(), lef, rig, flagg);
 }
 template <class Clave>
 ArbolB<Clave>::ArbolB(void)
@@ -103,18 +95,31 @@ bool ArbolB<Clave>::Insertar(const Clave &x)
 template <class Clave>
 bool ArbolB<Clave>::InsertarRama(NodoB<Clave> *&nodo, Clave dato)
 {
+  bool flagg = false;
+  int lef = 0;
+  int rig = 0;
+
   if (nodo == NULL)
   {
     nodo = new NodoB<Clave>(dato);
     return true;
   }
-  else if (checkHeightBalance(nodo, &height, 1, 0))
-  {
-    InsertarRama(nodo->get_izq(), dato);
-  }
   else
   {
-    InsertarRama(nodo->get_dcho(), dato);
+    checkHeightBalance(nodo->get_izq(), lef, rig, flagg);
+    int izquierda = lef + rig;
+    flagg = false;
+    lef = 0;
+    rig = 0;
+    checkHeightBalance(nodo->get_dcho(), lef, rig, flagg);
+    if (izquierda - (lef + rig) < 1)
+    {
+      InsertarRama(nodo->get_izq(), dato);
+    }
+    else
+    {
+      InsertarRama(nodo->get_dcho(), dato);
+    }
   }
 }
 
@@ -137,7 +142,7 @@ void ArbolB<Clave>::write()
       nivel_actual = nivel;
       cout << "\33[1;31m\n\t\tNivel " << nivel_actual << ": \033[0m";
     }
-   cout << nodo;
+    cout << nodo;
     // Si el nodo extraído no está vacío, se insertan sus dos hijos en la cola
     if (nodo != NULL)
     {
