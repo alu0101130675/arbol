@@ -3,30 +3,26 @@
 #include "cola.h"
 #include <vector>
 #include <iostream>
+#include <ab.h>
 
 using namespace std;
 
-#ifndef AB
-#define AB
+#ifndef ABE
+#define ABE
 
 template <class Clave>
-class ArbolB
+class ArbolB : public Arbol<Clave>
 {
 private:
-  NodoB<Clave> *raiz;
   vector<vector<NodoB<Clave>>> niveles;
-  int izquierda = 0;
-  int derecha = 0;
   int height = 0;
 
 public:
   ArbolB();
-  NodoB<Clave> *Buscar(Clave &x);
-  NodoB<Clave> *BuscarRama(NodoB<Clave> *nodo, Clave dato);
-  void Insertar(const Clave &x);
-  void InsertarRama(NodoB<Clave> *&nodo, Clave dato);
-  void inOrden();
-  void inOrden(NodoB<Clave> *&nodo);
+  bool Buscar(const Clave &x);
+  void BuscarRama(NodoB<Clave> *nodo, Clave dato, bool &flag);
+  bool Insertar(const Clave &x);
+  bool InsertarRama(NodoB<Clave> *&nodo, Clave dato);
   void write();
 };
 template <class Clave>
@@ -46,8 +42,6 @@ bool checkHeightBalance(NodoB<Clave> *root, int *height, int lef, int rig)
   r = checkHeightBalance(root->get_dcho(), &dchoHeight, 0, 0);
   l = l + lef;
   r = r + rig;
-  // cout<<"left: "<< l << endl;
-  // cout<<"right : " <<r<< endl;
 
   *height = (izqHeight > dchoHeight ? izqHeight : dchoHeight) + 1;
 
@@ -58,85 +52,80 @@ bool checkHeightBalance(NodoB<Clave> *root, int *height, int lef, int rig)
     return l && r;
 }
 template <class Clave>
-ArbolB<Clave>::ArbolB(void) : raiz(nullptr)
+ArbolB<Clave>::ArbolB(void)
 {
+  NodoB<Clave> *nodo = new NodoB<Clave>();
+  this->set_raiz(nodo);
 }
 
 template <class Clave>
-NodoB<Clave> *ArbolB<Clave>::Buscar(Clave &x)
+bool ArbolB<Clave>::Buscar(const Clave &x)
 {
-  return BuscarRama(raiz, x);
+  bool flag = false;
+  BuscarRama(this->get_raiz(), x, flag);
+  return flag;
 }
 
 template <class Clave>
-NodoB<Clave> *ArbolB<Clave>::BuscarRama(NodoB<Clave> *nodo, Clave dato)
-{
-  if (nodo == NULL)
-  {
-    return NULL;
-  }
-  if (dato == nodo->get_dato())
-  {
-    return nodo;
-  }
-  if (dato < nodo->get_dato())
-  {
-    return buscar_rama(nodo->get_izq(), dato);
-  }
-  if (dato > nodo->get_dato())
-  {
-    return buscar_rama(nodo->get_dch(), dato);
-  }
-}
-
-template <class Clave>
-void ArbolB<Clave>::Insertar(const Clave &x)
-{
-  InsertarRama(raiz, x);
-}
-
-template <class Clave>
-void ArbolB<Clave>::InsertarRama(NodoB<Clave> *&nodo, Clave dato)
-{
-  nodo->write();
-  if (nodo == NULL)
-    nodo = new NodoB<Clave>(dato);
-  else if (checkHeightBalance(nodo, &height, 1, 0))
-  {
-    cout << "entra en izquietda: " << endl;
-    // cout<<"izquierda: " << izquierda << endl;
-    InsertarRama(nodo->get_izq(), dato);
-  }
-  else
-  {
-    // cout<<"derecha: " << derecha << endl;
-    InsertarRama(nodo->get_dcho(), dato);
-  }
-}
-template <class Clave>
-void ArbolB<Clave>::inOrden(){
-inOrden(raiz);
-}
-template <class Clave>
-void ArbolB<Clave>::inOrden(NodoB<Clave> *&nodo)
+void ArbolB<Clave>::BuscarRama(NodoB<Clave> *nodo, Clave dato, bool &flag)
 {
   if (nodo == NULL)
   {
     return;
   }
-
-  inOrden(nodo->get_izq());
-  cout << nodo->get_dato() << " - ";
-  inOrden(nodo->get_dcho());
+  if (dato == nodo->get_dato())
+  {
+    flag = true;
+  }
+  BuscarRama(nodo->get_izq(), dato, flag);
+  BuscarRama(nodo->get_dcho(), dato, flag);
 }
+
+template <class Clave>
+bool ArbolB<Clave>::Insertar(const Clave &x)
+{
+  if (Buscar(x))
+  {
+    return false;
+  }
+  else
+  {
+    if (this->get_raiz()->get_dato() == NULL)
+    {
+      NodoB<Clave> *nodo = new NodoB<Clave>(x);
+      this->set_raiz(nodo);
+      return true;
+    }
+    InsertarRama(this->get_raiz(), x);
+  }
+}
+
+template <class Clave>
+bool ArbolB<Clave>::InsertarRama(NodoB<Clave> *&nodo, Clave dato)
+{
+  if (nodo == NULL)
+  {
+    nodo = new NodoB<Clave>(dato);
+    return true;
+  }
+  else if (checkHeightBalance(nodo, &height, 1, 0))
+  {
+    InsertarRama(nodo->get_izq(), dato);
+  }
+  else
+  {
+    InsertarRama(nodo->get_dcho(), dato);
+  }
+}
+
 template <class Clave>
 void ArbolB<Clave>::write()
 {
-  cola_ABB<Clave> cola;       // Cola para guardar los nodos por niveles
-  NodoB<Clave> *nodo;         // Nodo auxiliar
-  int nivel = 0;              // Nivel auxiliar
-  int nivel_actual = 0;       // Nivel actual
-  cola.insertar(raiz, nivel); // Se inserta el primer nodo y nivel (nodo raíz y nivel 0)
+  cola_ABB<Clave> cola;                   // Cola para guardar los nodos por niveles
+  NodoB<Clave> *nodo;                     // Nodo auxiliar
+  int nivel = 0;                          // Nivel auxiliar
+  int nivel_actual = 0;                   // Nivel actual
+  cola.insertar(this->get_raiz(), nivel); // Se inserta el primer nodo y nivel (nodo raíz y nivel 0)
   cout << "\33[1;31m\t\tNivel 0: \033[0m";
   // Mientras la cola no esté vacía...
   while (!cola.vacia())
@@ -148,7 +137,7 @@ void ArbolB<Clave>::write()
       nivel_actual = nivel;
       cout << "\33[1;31m\n\t\tNivel " << nivel_actual << ": \033[0m";
     }
-    nodo->write();
+   cout << nodo;
     // Si el nodo extraído no está vacío, se insertan sus dos hijos en la cola
     if (nodo != NULL)
     {

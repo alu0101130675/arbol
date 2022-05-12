@@ -9,9 +9,8 @@ int main(void)
 {
   int opcion = 0;
   int clave = 0;
-
-  ArbolB<int> ab;
-
+  Arbol<int> *ab;
+  ab= new ArbolB<int>;
   do
   {
     cout << "\33[1;32mIMPLEMENTACIÓN DE ÁRBOLES BINARIOS EQUILIBRADOS\033[0m" << endl;
@@ -31,23 +30,29 @@ int main(void)
     case 1:
       cout << "\33[1;33m\t\tIntroduzca la clave a insertar: \033[0m";
       cin >> clave;
-      ab.Insertar(clave);
+            if(!ab->Insertar(clave))
+      cout << "la clave ya esta en el arbol" << endl;
+      
       cout << "\33[1;33m\t\tMostrando el árbol vacío: \033[0m" << endl;
-      ab.write();
+      ab->write();
       cout << endl;
       break;
 
     case 2:
       cout << "\33[1;33m\t\tIntroduzca la clave a buscar: \033[0m";
       cin >> clave;
+      if(ab->Buscar(clave))
+      cout << "se encuentra en el arbol" << endl;
+      else 
+      cout << "no se encuetra" << endl;
       break;
     case 3:
       cout << endl;
-      ab.inOrden();
+      ab->inOrden();
       cout << endl;
       break;
     default:
-      cout << "\33[1;31m\t\tNo es un valor correcto (0, 1 o 2)\033[0m" << endl;
+      cout << "\33[1;31m\t\tNo es un valor correcto (0, 1, 2 o 3)\033[0m" << endl;
       break;
     }
   } while (opcion != 0);

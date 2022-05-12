@@ -18,8 +18,8 @@ class NodoB {
     NodoB<Clave>* &get_izq() { return izq; };
     NodoB<Clave>* &get_dcho() { return dcho; };
     Clave& get_dato() { return dato; };
-    
     void write();
+    
 };
 
 template <class Clave>
@@ -43,5 +43,13 @@ void NodoB<Clave>::write() {
   else
     cout << "[.]";
 }
+template <class Clave>
+std::ostream& operator<<(std::ostream& os, NodoB<Clave> *nodo) {
+  if(nodo != NULL)
+    os << "[" <<   nodo->get_dato() << "]";
+  else
+    os << "[.]";
+    return os;
+  }
 
 #endif
