@@ -22,6 +22,7 @@ public:
   void BuscarRama(NodoB<Clave> *nodo, Clave dato, bool &flag);
   bool Insertar(const Clave &x);
   bool InsertarRama(NodoB<Clave> *&nodo, Clave dato);
+  void eliminar(Clave x);
   void write();
 };
 template <class Clave>
@@ -46,7 +47,7 @@ void checkHeightBalance(NodoB<Clave> *root, int &lef, int &rig, bool &flagg)
 template <class Clave>
 ArbolB<Clave>::ArbolB(void)
 {
-  NodoB<Clave> *nodo = new NodoB<Clave>();
+  NodoB<Clave> *nodo = nullptr;
   this->set_raiz(nodo);
 }
 
@@ -82,7 +83,7 @@ bool ArbolB<Clave>::Insertar(const Clave &x)
   }
   else
   {
-    if (this->get_raiz()->get_dato() == NULL)
+    if (this->get_raiz() == nullptr)
     {
       NodoB<Clave> *nodo = new NodoB<Clave>(x);
       this->set_raiz(nodo);
@@ -122,7 +123,10 @@ bool ArbolB<Clave>::InsertarRama(NodoB<Clave> *&nodo, Clave dato)
     }
   }
 }
-
+template <class Clave>
+void ArbolB<Clave>::eliminar(Clave x){
+  std::cout << "no implementado" << std::endl;
+}
 template <class Clave>
 void ArbolB<Clave>::write()
 {

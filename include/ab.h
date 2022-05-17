@@ -17,9 +17,8 @@ private:
 
 public:
   virtual bool Buscar(const Clave &x) = 0;
-  //virtual NodoB<Clave> *BuscarRama(NodoB<Clave> *nodo, Clave dato) = 0;
   virtual bool Insertar(const Clave &x) = 0;
- // virtual void InsertarRama(NodoB<Clave> *&nodo, Clave dato) = 0;
+  virtual void eliminar(Clave x)=0;
   virtual void write() = 0;
   void inOrden();
   void inOrden(NodoB<Clave> *&nodo);

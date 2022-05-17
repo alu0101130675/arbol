@@ -18,6 +18,7 @@ class NodoB {
     NodoB<Clave>* &get_izq() { return izq; };
     NodoB<Clave>* &get_dcho() { return dcho; };
     Clave& get_dato() { return dato; };
+    void set_dato(Clave date) { dato=date; };
     void write();
     
 };
