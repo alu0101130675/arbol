@@ -47,9 +47,6 @@ public:
   bool eliminar(Clave x);
 
   // Recorridos
-  void preorden(NodoB<Clave> *nodo);
-  void inorden(NodoB<Clave> *nodo);
-  void postorden(NodoB<Clave> *nodo);
   void niveles(NodoB<Clave> *nodo);
   void write(/*int recorrido*/);
 };
@@ -245,46 +242,6 @@ void ABB<Clave>::sustituir(NodoB<Clave> *&eliminado, NodoB<Clave> *&sustituto)
     sustituto = sustituto->get_izq();
   }
 }
-
-template <class Clave>
-void ABB<Clave>::inorden(NodoB<Clave> *nodo)
-{
-  if (nodo == nullptr)
-    return;
-
-  inorden(nodo->get_izq());
-  std::cout << "[";
-  nodo->get_dato().write();
-  std::cout << "]";
-  inorden(nodo->get_dcho());
-}
-
-template <class Clave>
-void ABB<Clave>::preorden(NodoB<Clave> *nodo)
-{
-  if (nodo == nullptr)
-    return;
-
-  std::cout << "[";
-  nodo->get_dato().write();
-  std::cout << "]";
-  preorden(nodo->get_izq());
-  preorden(nodo->get_dcho());
-}
-
-template <class Clave>
-void ABB<Clave>::postorden(NodoB<Clave> *nodo)
-{
-  if (nodo == nullptr)
-    return;
-
-  postorden(nodo->get_izq());
-  postorden(nodo->get_dcho());
-  std::cout << "[";
-  nodo->get_dato().write();
-  std::cout << "]";
-}
-
 template <class Clave>
 void ABB<Clave>::niveles(NodoB<Clave> *nodo)
 {
@@ -318,15 +275,8 @@ void ABB<Clave>::niveles(NodoB<Clave> *nodo)
 }
 
 template <class Clave>
-void ABB<Clave>::write(/*int recorrido*/)
+void ABB<Clave>::write()
 {
-  /*if (recorrido == 1)
-    preorden(this->get_raiz());
-  else if (recorrido == 2)
-    inorden(this->get_raiz());
-  else if (recorrido == 3)
-    postorden(this->get_raiz());
-  else*/
   niveles(this->get_raiz());
 }
 #endif
