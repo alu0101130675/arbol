@@ -18,7 +18,7 @@ private:
 public:
   virtual bool Buscar(const Clave &x) = 0;
   virtual bool Insertar(const Clave &x) = 0;
-  virtual void eliminar(Clave x)=0;
+  virtual bool eliminar(Clave x)=0;
   virtual void write() = 0;
   void inOrden();
   void inOrden(NodoB<Clave> *&nodo);

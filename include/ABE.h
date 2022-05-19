@@ -22,7 +22,7 @@ public:
   void BuscarRama(NodoB<Clave> *nodo, Clave dato, bool &flag);
   bool Insertar(const Clave &x);
   bool InsertarRama(NodoB<Clave> *&nodo, Clave dato);
-  void eliminar(Clave x);
+  bool eliminar(Clave x);
   void write();
 };
 template <class Clave>
@@ -124,8 +124,9 @@ bool ArbolB<Clave>::InsertarRama(NodoB<Clave> *&nodo, Clave dato)
   }
 }
 template <class Clave>
-void ArbolB<Clave>::eliminar(Clave x){
+bool ArbolB<Clave>::eliminar(Clave x){
   std::cout << "no implementado" << std::endl;
+  return false;
 }
 template <class Clave>
 void ArbolB<Clave>::write()

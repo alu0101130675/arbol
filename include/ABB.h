@@ -25,10 +25,10 @@ private:
   // Métodos ABB
   // Buscar(const Clave &x);        // sin IMplementar
   bool Insertar(const Clave &x); // sin IMplementar
-  bool Buscar_rama(NodoB<Clave> *nodo, Clave x);
+  void Buscar_rama(NodoB<Clave> *nodo, Clave x, bool &flag);
   void insertar_rama(NodoB<Clave> *&nodo, Clave x);
   void sustituir(NodoB<Clave> *&eliminado, NodoB<Clave> *&sustituto); // COMENTAR
-  void eliminar_rama(NodoB<Clave> *&nodo, Clave x);
+  bool eliminar_rama(NodoB<Clave> *&nodo, Clave x);
 
 public:
   // Operaciones Iniciales + Podar
@@ -44,7 +44,7 @@ public:
 
   // Métodos ABB
   bool Buscar(const Clave &x);
-  void eliminar(Clave x);
+  bool eliminar(Clave x);
 
   // Recorridos
   void preorden(NodoB<Clave> *nodo);
@@ -130,21 +130,23 @@ const int ABB<Clave>::altura_nodo(NodoB<Clave> *nodo)
 template <class Clave>
 bool ABB<Clave>::Buscar(const Clave &x)
 {
-  return Buscar_rama(this->get_raiz(), x);
+  bool flag=false;
+  Buscar_rama(this->get_raiz(), x, flag);
+  return flag;
 }
 
 template <class Clave>
-bool ABB<Clave>::Buscar_rama(NodoB<Clave> *nodo, Clave x)
+void ABB<Clave>::Buscar_rama(NodoB<Clave> *nodo, Clave x, bool &flag)
 {
   if (nodo == nullptr)
-    return false;
+    return;
 
   else if (x == nodo->get_dato())
-    return true;
+    flag = true;
 
   else if (x < nodo->get_dato())
-    Buscar_rama(nodo->get_izq(), x);
-  Buscar_rama(nodo->get_dcho(), x);
+    Buscar_rama(nodo->get_izq(), x, flag);
+  Buscar_rama(nodo->get_dcho(), x, flag);
 }
 
 template <class Clave>
@@ -152,14 +154,16 @@ bool ABB<Clave>::Insertar(const Clave &x)
 {
   if (Buscar(x))
     return false;
-    else {  if (this->get_raiz() == nullptr)
+  else
   {
-    NodoB<Clave> *nodo = new NodoB<Clave>(x);
-    this->set_raiz(nodo);
-    return true;
+    if (this->get_raiz() == nullptr)
+    {
+      NodoB<Clave> *nodo = new NodoB<Clave>(x);
+      this->set_raiz(nodo);
+      return true;
+    }
+    insertar_rama(this->get_raiz(), x);
   }
-  insertar_rama(this->get_raiz(), x);}
-
 }
 
 template <class Clave>
@@ -176,16 +180,22 @@ void ABB<Clave>::insertar_rama(NodoB<Clave> *&nodo, Clave x)
 }
 
 template <class Clave>
-void ABB<Clave>::eliminar(Clave x)
+bool ABB<Clave>::eliminar(Clave x)
 {
-  eliminar_rama(this->get_raiz(), x);
+  if (!Buscar(x))
+  {
+    cout << "no existe el elemento" << endl;
+    return false;
+  }
+
+  return eliminar_rama(this->get_raiz(), x);
 }
 
 template <class Clave>
-void ABB<Clave>::eliminar_rama(NodoB<Clave> *&nodo, Clave x)
+bool ABB<Clave>::eliminar_rama(NodoB<Clave> *&nodo, Clave x)
 {
   if (nodo == nullptr)
-    return;
+    return false;
 
   if (x < nodo->get_dato())
     eliminar_rama(nodo->get_izq(), x);
@@ -198,15 +208,25 @@ void ABB<Clave>::eliminar_rama(NodoB<Clave> *&nodo, Clave x)
     NodoB<Clave> *eliminado = nodo;
 
     if (nodo->get_dcho() == nullptr)
+    {
       nodo = nodo->get_izq();
+      delete (eliminado);
+      return true;
+    }
 
     else if (nodo->get_izq() == nullptr)
+    {
       nodo = nodo->get_dcho();
-
+      delete (eliminado);
+      return true;
+    }
     else
+    {
       sustituir(eliminado, nodo->get_izq());
-
-    delete (eliminado);
+      delete (eliminado);
+      return true;
+    }
+    return false;
   }
 }
 

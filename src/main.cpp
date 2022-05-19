@@ -23,6 +23,7 @@ int main(void)
     return 0;
   case 1:
     ab = new ArbolB<int>;
+    int aux;
     do
     {
       cout << "\33[1;32mOPCIONES DEL ARBOL SELECCIONADO \033[0m" << endl;
@@ -32,8 +33,8 @@ int main(void)
       cout << "\33[1;34m\t\t[2]  Buscar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[3]  indorden Clave\033[0m" << endl;
       cout << "\33[1;34m\tRespuesta: \033[0m";
-      cin >> opcion;
-      switch (opcion)
+      cin >> aux;
+      switch (aux)
       {
       case 0:
         cout << "\33[1;32m\t\tSaliendo del programa\033[0m" << endl;
@@ -66,9 +67,11 @@ int main(void)
         cout << "\33[1;31m\t\tNo es un valor correcto (0, 1, 2 o 3)\033[0m" << endl;
         break;
       }
-    } while (opcion != 0);
+    } while (aux != 0);
+    break;
   case 2:
     ab = new ABB<int>;
+    int auxx;
     do
     {
       cout << "\33[1;32mOPCIONES DEL ARBOL SELECCIONADO \033[0m" << endl;
@@ -78,10 +81,10 @@ int main(void)
       cout << "\33[1;34m\t\t[2]  Buscar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[3]  eliminar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[3]  indorden Clave\033[0m" << endl;
-      
+
       cout << "\33[1;34m\tRespuesta: \033[0m";
-      cin >> opcion;
-      switch (opcion)
+      cin >> auxx;
+      switch (auxx)
       {
       case 0:
         cout << "\33[1;32m\t\tSaliendo del programa\033[0m" << endl;
@@ -105,12 +108,14 @@ int main(void)
         else
           cout << "no se encuetra" << endl;
         break;
-        case 3:
+      case 3:
         cout << endl;
-                cin >> clave;
-
-        ab->eliminar(clave);
-                ab->write();
+        cin >> clave;
+        if (ab->eliminar(clave))
+          cout << "se a elminado el elemento correctamente" << endl;
+        else
+          cout << "no se pudo elminar" << endl;
+        ab->write();
 
         cout << endl;
         break;
@@ -123,10 +128,10 @@ int main(void)
         cout << "\33[1;31m\t\tNo es un valor correcto (0, 1, 2 o 3)\033[0m" << endl;
         break;
       }
-    } while (opcion != 0);
+    } while (auxx != 0);
+    break;
   default:
     cout << "\33[1;31m\t\tNo es un valor correcto (0, 1, 2 o 3)\033[0m" << endl;
     break;
   }
-
-  }
+}
