@@ -7,30 +7,15 @@ template <class Clave>
 class AVL : public ABB<Clave>
 {
 private:
-    // Operaciones iniciales
     void podar(NodoAVL<Clave> *&nodo);
-
-    // Tamano y altura
     const int size_rama(NodoAVL<Clave> *nodo);
     const int altura_nodo(NodoAVL<Clave> *nodo);
-
-    // Busqueda
-   // NodoAVL<Clave> *buscar_rama(NodoAVL<Clave> *nodo, Clave x);
-
-    // Insertar
-    void insertar_bal(NodoAVL<Clave> *&nodo, NodoAVL<Clave> *nuevo, bool &crece);
+    void insertar_bal(NodoAVL<Clave> *&nodo, NodoAVL<Clave> *nuevo, bool &crece, bool &flag);
     void insertar_re_bal_izquierda(NodoAVL<Clave> *&nodo, bool &crece);
     void insertar_re_bal_derecha(NodoAVL<Clave> *&nodo, bool &crece);
-
-    // Eliminar
     void eliminar_rama(NodoAVL<Clave> *&nodo, Clave x, bool &decrece);
     void eliminar_re_bal_izquierda(NodoAVL<Clave> *&nodo, bool &decrece);
     void eliminar_re_bal_derecha(NodoAVL<Clave> *&nodo, bool &decrece);
-
-    // Recorridos
-    void preorden(NodoAVL<Clave> *nodo);
-    void inorden(NodoAVL<Clave> *nodo);
-    void postorden(NodoAVL<Clave> *nodo);
     void niveles(NodoAVL<Clave> *nodo);
     NodoAVL<Clave> *&raiz();
 
@@ -43,11 +28,6 @@ public:
     // Tamano y altura
     const int size();
     const int altura();
-
-    // Busqueda
-    //NodoAVL<Clave> *buscar(Clave x);
-
-    // Rotaciones
     void rotacion_II(NodoAVL<Clave> *&nodo);
     void rotacion_DD(NodoAVL<Clave> *&nodo);
     void rotacion_ID(NodoAVL<Clave> *&nodo);
@@ -141,28 +121,7 @@ const int AVL<Clave>::altura_nodo(NodoAVL<Clave> *nodo)
     else
         return alt_izquierda++;
 }
-/*
-template <class Clave>
-NodoAVL<Clave> *AVL<Clave>::buscar(Clave x)
-{
-    return buscar_rama(raiz(), x);
-}
 
-template <class Clave>
-NodoAVL<Clave> *AVL<Clave>::buscar_rama(NodoAVL<Clave> *nodo, Clave x)
-{
-    if (nodo == nullptr)
-        return nullptr;
-
-    if (x == nodo->get_dato())
-        return nodo;
-
-    if (x < nodo->get_dato())
-        return buscar_rama(nodo->izquierdo(), x);
-
-    return buscar_rama(nodo->derecho(), x);
-}
-*/
 template <class Clave>
 void AVL<Clave>::rotacion_II(NodoAVL<Clave> *&nodo)
 {
@@ -258,34 +217,36 @@ void AVL<Clave>::rotacion_DI(NodoAVL<Clave> *&nodo)
 template <class Clave>
 bool AVL<Clave>::Insertar(const Clave &x)
 {
+    bool flag = false;
     if (this->Buscar(x))
         return false;
     else
     {
         NodoAVL<Clave> *nuevo = new NodoAVL<Clave>(x);
         bool crece = false;
-        insertar_bal(raiz(), nuevo, crece);
-        return crece;
+        insertar_bal(raiz(), nuevo, crece, flag);
     }
+    return flag;
 }
 
 template <class Clave>
-void AVL<Clave>::insertar_bal(NodoAVL<Clave> *&nodo, NodoAVL<Clave> *nuevo, bool &crece)
+void AVL<Clave>::insertar_bal(NodoAVL<Clave> *&nodo, NodoAVL<Clave> *nuevo, bool &crece, bool &flag)
 {
     if (nodo == nullptr)
     {
         nodo = nuevo;
         crece = true;
+        flag = true;
     }
     else if (nuevo->get_dato() < nodo->get_dato())
     {
-        insertar_bal(nodo->izquierdo(), nuevo, crece);
+        insertar_bal(nodo->izquierdo(), nuevo, crece, flag);
         if (crece)
             insertar_re_bal_izquierda(nodo, crece);
     }
     else
     {
-        insertar_bal(nodo->derecho(), nuevo, crece);
+        insertar_bal(nodo->derecho(), nuevo, crece, flag);
         if (crece)
             insertar_re_bal_derecha(nodo, crece);
     }
@@ -361,6 +322,7 @@ bool AVL<Clave>::eliminar(Clave x)
 {
     bool decrece = false;
     eliminar_rama(raiz(), x, decrece);
+    return decrece;
 }
 
 template <class Clave>
@@ -413,11 +375,15 @@ void AVL<Clave>::eliminar_re_bal_izquierda(NodoAVL<Clave> *&nodo, bool &decrece)
     case -1:
         nodo1 = nodo->derecho();
         if (nodo1->get_bal() > 0)
+        {
+            std::cout << "rotacion DI en " << nodo->get_dato() << std::endl;
             rotacion_DI(nodo);
+        }
         else
         {
             if (nodo1->get_bal() == 0)
                 decrece = false;
+            std::cout << "rotacion DD en " << nodo->get_dato() << std::endl;
             rotacion_DD(nodo);
         }
         break;
@@ -441,11 +407,15 @@ void AVL<Clave>::eliminar_re_bal_derecha(NodoAVL<Clave> *&nodo, bool &decrece)
     case 1:
         nodo1 = nodo->izquierdo();
         if (nodo->get_bal() < 0)
+        {
+            std::cout << "rotacion ID en " << nodo->get_dato() << std::endl;
             rotacion_ID(nodo);
+        }
         else
         {
             if (nodo1->get_bal() == 0)
                 decrece = false;
+            std::cout << "rotacion II en " << nodo->get_dato() << std::endl;
             rotacion_II(nodo);
         }
         break;
@@ -477,45 +447,6 @@ void AVL<Clave>::sustituir(NodoAVL<Clave> *&eliminado, NodoAVL<Clave> *&sustitut
         sustituto = sustituto->izquierdo();
         decrece = true;
     }
-}
-
-template <class Clave>
-void AVL<Clave>::inorden(NodoAVL<Clave> *nodo)
-{
-    if (nodo == nullptr)
-        return;
-
-    inorden(nodo->izquierdo());
-    std::cout << "[";
-    nodo->get_dato().write();
-    std::cout << "]";
-    inorden(nodo->derecho());
-}
-
-template <class Clave>
-void AVL<Clave>::preorden(NodoAVL<Clave> *nodo)
-{
-    if (nodo == nullptr)
-        return;
-
-    std::cout << "[";
-    nodo->get_dato().write();
-    std::cout << "]";
-    preorden(nodo->izquierdo());
-    preorden(nodo->derecho());
-}
-
-template <class Clave>
-void AVL<Clave>::postorden(NodoAVL<Clave> *nodo)
-{
-    if (nodo == nullptr)
-        return;
-
-    postorden(nodo->izquierdo());
-    postorden(nodo->derecho());
-    std::cout << "[";
-    nodo->get_dato().write();
-    std::cout << "]";
 }
 
 template <class Clave>

@@ -19,7 +19,7 @@ int main(void)
   cout << "\33[1;34m\t\t[0]  Salir\033[0m" << endl;
   cout << "\33[1;34m\t\t[1] Arbol equilibrado \033[0m" << endl;
   cout << "\33[1;34m\t\t[2]  Arbol binario\033[0m" << endl;
-  cout << "\33[1;34m\t\t[3]  Arbol binario\033[0m" << endl;
+  cout << "\33[1;34m\t\t[3]  AVL\033[0m" << endl;
 
   cin >> opcion;
   switch (opcion)
@@ -36,7 +36,7 @@ int main(void)
       cout << "\33[1;34m\t\t[0]  Salir\033[0m" << endl;
       cout << "\33[1;34m\t\t[1]  Insertar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[2]  Buscar Clave\033[0m" << endl;
-      cout << "\33[1;34m\t\t[3]  indorden Clave\033[0m" << endl;
+      cout << "\33[1;34m\t\t[3]  indorden \033[0m" << endl;
       cout << "\33[1;34m\tRespuesta: \033[0m";
       cin >> aux;
       switch (aux)
@@ -85,7 +85,7 @@ int main(void)
       cout << "\33[1;34m\t\t[1]  Insertar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[2]  Buscar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[3]  eliminar Clave\033[0m" << endl;
-      cout << "\33[1;34m\t\t[3]  indorden Clave\033[0m" << endl;
+      cout << "\33[1;34m\t\t[4]  indorden Clave\033[0m" << endl;
 
       cout << "\33[1;34m\tRespuesta: \033[0m";
       cin >> auxx;
@@ -146,7 +146,7 @@ int main(void)
       cout << "\33[1;34m\t\t[1]  Insertar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[2]  Buscar Clave\033[0m" << endl;
       cout << "\33[1;34m\t\t[3]  eliminar Clave\033[0m" << endl;
-      cout << "\33[1;34m\t\t[3]  indorden Clave\033[0m" << endl;
+      cout << "\33[1;34m\t\t[4]  indorden Clave\033[0m" << endl;
 
       cout << "\33[1;34m\tRespuesta: \033[0m";
       cin >> var;
@@ -179,8 +179,6 @@ int main(void)
         cin >> clave;
         if (ab->eliminar(clave))
           cout << "se a elminado el elemento correctamente" << endl;
-        else
-          cout << "no se pudo elminar" << endl;
         ab->write();
 
         cout << endl;
